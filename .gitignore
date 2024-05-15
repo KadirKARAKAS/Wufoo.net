@@ -1,0 +1,18 @@
+# Sanal ortam klasörü
+venv/
+
+# Python cache dosyaları
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Çevresel dosyalar
+.env
+.DS_Store
+
+# Veritabanı dosyaları
+*.sqlite
+*.db
+
+# Flask spesifik dosyalar
+instance/
