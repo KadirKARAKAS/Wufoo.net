@@ -1,6 +1,6 @@
 # Sanal ortam klasörü
 venv/
-
+config.py
 # Python cache dosyaları
 __pycache__/
 *.py[cod]
