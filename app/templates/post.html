@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        a {
+            font-family: 'Darker Grotesque', sans-serif;
+            font-size: 20px;
+            text-decoration: none;
+        }
+        .lavish {
+            font-family: 'Lavishly Yours', cursive;
+        }
+        .forum-content {
+            margin: 50px auto;
+            max-width: 1200px; 
+            padding: 20px;
+            background-color: #f8f9fa; 
+            border-radius: 10px; 
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .forum-item img {
+            margin-right: 15px;
+        }
+        .customSubMenuHolder:hover>.customSubMenu {
+            display: block
+        }
+        .customSubMenu {
+            display: none;
+            box-shadow: 2px 8px 12px rgba(0, 0, 0, 0.5);
+            position: absolute;
+            width: 100%;
+            left: 0;
+            background: #00354b;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('routes.home') }}">MyBlog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto d-none d-lg-inline-flex">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item mx-2">
+                            <a class="nav-link" href="{{ url_for('routes.account') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                                </svg>
+                                <span class="ms-1 align-texttop">Account</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <form class="d-inline" action="{{ url_for('routes.logout') }}" method="POST">
+                                <button class="btn btn-link nav-link" type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h3.793l-.146.146a.5.5 0 1 0 .708.708l2-2a.5.5 0 0 0 0-.708l-2-2a.5.5 0 1 0-.708.708l.146.146H6v-8a.5.5 0 0 0-.5-.5z"/>
+                                        <path fill-rule="evenodd" d="M11.5 8a.5.5 0 0 0-.5.5v1H4v-1a.5.5 0 0 0-1 0v1a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3.5a.5.5 0 0 0 0-1H4v-2h7v2h-2.5a.5.5 0 0 0 0 1H11a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/>
+                                    </svg>
+                                    <span class="ms-1 align-texttop">Logout</span>
+                                </button>
+                            </form>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">Post Paylaş</button>
+                        </li>
+                    {% else %}
+                        <li class="nav-item mx-2">
+                            <a class="nav-link" href="{{ url_for('routes.login') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                                </svg>
+                                <span class="ms-1 align-texttop">Login</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link" href="{{ url_for('routes.register') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
+                                    <path d="M8 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                                    <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 0-.5.5v2H5.5a.5.5 0 0 0 0 1H7.5v2a.5.5 0 0 0 1 0v-2h2a.5.5 0 0 0 0-1h-2v-2a.5.5 0 0 0-.5-.5z"/>
+                                </svg>
+                                <span class="ms-1 align-texttop">Register</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Gönderi Detayları ve Yorumlar -->
+    <div class="container mt-4">
+        <div class="inner-main-body p-2 p-sm-3 collapse forum-content show">
+            <div class="card mb-2">
+                <div class="card-body p-2 p-sm-3">
+                    <div class="media forum-item">
+                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-circle" width="50" alt="User"/>
+                        <div class="media-body">
+                            <h6>{{ post.title }}</h6>
+                            <p class="text-secondary">{{ post.content }}</p>
+                            <p class="text-muted">
+                                <a href="javascript:void(0)">{{ post.author.username }}</a> paylaştı
+                                <span class="text-secondary font-weight-bold">{{ post.date_posted.strftime('%d %B %Y') }}</span>
+                            </p>
+                            {% if current_user.is_authenticated and current_user.id == post.author.id %}
+                                <a href="#" class="btn btn-link card-link" data-bs-toggle="modal" data-bs-target="#updatePostModal">Düzenle</a>
+                                <form action="{{ url_for('routes.delete_post', post_id=post.id) }}" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-link card-link text-danger" onclick="return confirm('Bu gönderiyi silmek istediğinizden emin misiniz?')">Sil</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Düzenle Modal'ı -->
+            <div class="modal fade" id="updatePostModal" tabindex="-1" aria-labelledby="updatePostModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updatePostModalLabel">Gönderiyi Güncelle</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ url_for('routes.update_post', post_id=post.id) }}" method="POST">
+                                <div class="mb-3">
+                                    <label for="title{{ post.id }}" class="form-label">Başlık</label>
+                                    <input type="text" class="form-control" id="title{{ post.id }}" name="title" value="{{ post.title }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="content{{ post.id }}" class="form-label">İçerik</label>
+                                    <textarea class="form-control" id="content{{ post.id }}" name="content" rows="3" required>{{ post.content }}</textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="category{{ post.id }}" class="form-label">Kategori</label>
+                                    <select class="form-select" id="category{{ post.id }}" name="category" required>
+                                        {% for category in categories %}
+                                            <option value="{{ category.id }}" {% if category.id == post.category_id %}selected{% endif %}>{{ category.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Güncelle</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Yorumlar -->
+            <div class="inner-main-body p-2 p-sm-3 collapse forum-content show">
+                <h4>Yorumlar</h4>
+                {% if post.comments %}
+                    {% for comment in post.comments %}
+                        <div class="card mb-2">
+                            <div class="card-body p-2 p-sm-3">
+                                <div class="media forum-item">
+                                    <img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="mr-3 rounded-circle" width="40" alt="User">
+                                    <div class="media-body">
+                                        <h6>{{ comment.user.username }}</h6>
+                                        <p>{{ comment.content }}</p>
+                                        <p class="text-muted">
+                                            <span class="text-secondary font-weight-bold">{{ comment.date_posted.strftime('%d %B %Y') }}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Henüz yorum yapılmamış.</p>
+                {% endif %}
+            </div>
+
+            <!-- Yorum Ekle -->
+            <div class="inner-main-body p-2 p-sm-3 collapse forum-content show">
+                <h4>Yorum Yap</h4>
+                <form action="{{ url_for('routes.new_comment', post_id=post.id) }}" method="POST">
+                    <div class="mb-3">
+                        <label for="content{{ post.id }}" class="form-label">Yorum</label>
+                        <textarea class="form-control" id="content{{ post.id }}" name="content" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Gönder</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
