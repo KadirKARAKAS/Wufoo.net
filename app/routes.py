@@ -69,6 +69,12 @@ def login():
 
     return render_template('login.html')
 
+@routes.route("/user/<int:user_id>")
+def user_profile(user_id):
+    user = User.query.get_or_404(user_id)
+    posts = Post.query.filter_by(author=user).all()
+    return render_template('user_profile.html', user=user, posts=posts)
+
 @routes.route("/register", methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
