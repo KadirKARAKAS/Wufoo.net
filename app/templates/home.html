@@ -149,7 +149,7 @@
                                 </h6>
                                 <p class="text-secondary">{{ post.content[:150] }}...</p>
                                 <p class="text-muted">
-                                    <a href="javascript:void(0)">{{ post.author.username }}</a> paylaştı
+                                    <a href="{{ url_for('routes.user_profile', user_id=post.author.id) }}">{{ post.author.username }}</a> paylaştı
                                     <span class="text-secondary font-weight-bold">{{ post.date_posted.strftime('%d %B %Y') }}</span>
                                 </p>
                                 {% if current_user.is_authenticated and current_user.id == post.author.id %}
