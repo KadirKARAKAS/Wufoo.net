@@ -43,7 +43,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url_for('routes.home') }}">MyBlog</a>
+            <a class="navbar-brand" href="{{ url_for('routes.home') }}">WuFoo.NET</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -109,8 +109,9 @@
                             <h6>{{ post.title }}</h6>
                             <p class="text-secondary">{{ post.content }}</p>
                             <p class="text-muted">
-                                <a href="javascript:void(0)">{{ post.author.username }}</a> paylaştı
+                                <a href="{{ url_for('routes.user_profile', user_id=post.author.id) }}">{{ post.author.username }}</a> paylaştı
                                 <span class="text-secondary font-weight-bold">{{ post.date_posted.strftime('%d %B %Y') }}</span>
+                                <a href="{{ url_for('routes.post', post_id=post.id) }}" class="text-secondary">Yorumlar ({{ post.comments|length }})</a>
                             </p>
                             {% if current_user.is_authenticated and current_user.id == post.author.id %}
                                 <a href="#" class="btn btn-link card-link" data-bs-toggle="modal" data-bs-target="#updatePostModal">Düzenle</a>
