@@ -33,7 +33,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url_for('routes.home') }}">MyBlog</a>
+            <a class="navbar-brand" href="{{ url_for('routes.home') }}">WuFoo.NET</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -91,18 +91,18 @@
     <!-- Kategori Filtreleme -->
     <div class="container mt-3">
         <div class="row">
-            <div class="col">
+            <div class="col d-flex justify-content-center">
                 <div class="btn-group" role="group" aria-label="Kategori Filtreleme">
                     <a href="{{ url_for('routes.home') }}" class="btn btn-outline-secondary">Tümü</a>
                     {% for category in categories %}
-                        <a href="{{ url_for('routes.category_posts', category_id=category.id) }}" class="btn btn-outline-secondary">{{ category.name }}</a>
+                        <a href="{{ url_for('routes.category_posts', category_id=category.id) }}" class="btn btn-outline-secondary">{{ category.name }} ({{ category.posts|length }})</a>
                     {% endfor %}
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Yeni Gönderi Modal -->
+    <!-- Yeni Gönderi Modalı -->
     <div class="modal fade" id="newPostModal" tabindex="-1" aria-labelledby="newPostModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -123,7 +123,7 @@
                         <div class="mb-3">
                             <label for="category" class="form-label">Kategori</label>
                             <select class="form-select" id="category" name="category" required>
-                                {% for category in categories %}
+                                {% for category in categories|sort(attribute='name') %}
                                     <option value="{{ category.id }}">{{ category.name }}</option>
                                 {% endfor %}
                             </select>
@@ -151,6 +151,7 @@
                                 <p class="text-muted">
                                     <a href="{{ url_for('routes.user_profile', user_id=post.author.id) }}">{{ post.author.username }}</a> paylaştı
                                     <span class="text-secondary font-weight-bold">{{ post.date_posted.strftime('%d %B %Y') }}</span>
+                                    <a href="{{ url_for('routes.post', post_id=post.id) }}" class="text-secondary">Yorumlar ({{ post.comments|length }})</a>
                                 </p>
                                 {% if current_user.is_authenticated and current_user.id == post.author.id %}
                                     <a href="#" class="btn btn-link card-link" data-bs-toggle="modal" data-bs-target="#updatePostModal{{ post.id }}">Düzenle</a>
@@ -184,7 +185,7 @@
                                     <div class="mb-3">
                                         <label for="category{{ post.id }}" class="form-label">Kategori</label>
                                         <select class="form-select" id="category{{ post.id }}" name="category" required>
-                                            {% for category in categories %}
+                                            {% for category in categories|sort(attribute='name') %}
                                                 <option value="{{ category.id }}" {% if post.category_id == category.id %}selected{% endif %}>{{ category.name }}</option>
                                             {% endfor %}
                                         </select>
