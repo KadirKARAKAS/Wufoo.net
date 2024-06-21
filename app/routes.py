@@ -1,25 +1,23 @@
-from flask import Blueprint, render_template, url_for, flash, redirect, request
+from flask import Blueprint, render_template, url_for, flash, redirect, request, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from app import db, bcrypt
 from app.models import User, Post, Category, Comment
+from werkzeug.utils import secure_filename
 import os
 import secrets
 from PIL import Image
-from flask import current_app, flash
+from flask import current_app
 
-def save_picture(form_picture):
+
+def save_picture(form_picture, folder='uploads'):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
-    picture_path = os.path.join(current_app.root_path, 'static/profile_pics', picture_fn)
+    picture_path = os.path.join(current_app.root_path, 'static', folder, picture_fn)
 
-    # Klasör mevcut değilse oluştur
     os.makedirs(os.path.dirname(picture_path), exist_ok=True)
 
-    # Resmi yeniden boyutlandır ve kaydet
-    output_size = (125, 125)
     img = Image.open(form_picture)
-    img.thumbnail(output_size)
     img.save(picture_path)
 
     return picture_fn
@@ -31,6 +29,22 @@ def home():
     posts = Post.query.all()
     categories = Category.query.all()
     return render_template('home.html', posts=posts, categories=categories)
+
+@routes.route("/upload_image", methods=["POST"])
+@login_required
+def upload_image():
+    if 'image' not in request.files:
+        return jsonify({'success': False, 'message': 'No image provided'}), 400
+
+    image = request.files['image']
+    if image.filename == '':
+        return jsonify({'success': False, 'message': 'No image selected'}), 400
+
+    filename = secure_filename(image.filename)
+    image_url = save_picture(image, folder='uploads')
+    image_url = url_for('static', filename='uploads/' + image_url)
+
+    return jsonify({'success': True, 'url': image_url})
 
 @routes.route("/new_post_home", methods=['POST'])
 @login_required
@@ -139,8 +153,8 @@ def new_post():
 @routes.route("/post/<int:post_id>")
 def post(post_id):
     post = Post.query.get_or_404(post_id)
-    return render_template('post.html', title=post.title, post=post)
-
+    categories = Category.query.all()  # Kategorileri buraya ekleyin
+    return render_template('post.html', title=post.title, post=post, categories=categories)
 
 @routes.route("/post/<int:post_id>/delete", methods=['POST'])
 @login_required
@@ -179,4 +193,4 @@ def update_post(post_id):
     post.category_id = request.form.get('category')
     db.session.commit()
     flash('Gönderiniz güncellendi!', 'success')
-    return redirect(url_for('routes.home'))
+    return redirect(url_for('routes.post', post_id=post.id))
