@@ -1,12 +1,12 @@
-<!-- templates/account.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Sayfası</title>
+    <title>Profil</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <style>
         a {
             font-family: 'Darker Grotesque', sans-serif;
@@ -53,6 +53,7 @@
                             <form class="d-inline" action="{{ url_for('routes.logout') }}" method="POST">
                                 <button class="btn btn-link nav-link" type="submit">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h3.793l-.146.146a.5.5 0 1 0 .708.708l2-2a.5.5 0 0 0 0-.708l-2-2a.5.5 0 1 0-.708.708l.146.146H6v-8a.5.5 0 0 0-.5-.5z"/>
                                         <path fill-rule="evenodd" d="M11.5 8a.5.5 0 0 0-.5.5v1H4v-1a.5.5 0 0 0-1 0v1a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3.5a.5.5 0 0 0 0-1H4v-2h7v2h-2.5a.5.5 0 0 0 0 1H11a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/>
                                     </svg>
                                     <span class="ms-1 align-texttop">Logout</span>
@@ -69,129 +70,135 @@
                                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                                     <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
                                 </svg>
-                                <span class="ms-1 align-texttop">Login</span>
-                            </a>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link" href="{{ url_for('routes.register') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
-                                    <path d="M8 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                                    <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 0-.5.5v2H5.5a.5.5 0 0 0 0 1H7.5v2a.5.5 0 0 0 1 0v-2h2a.5.5 0 0 0 0-1h-2v-2a.5.5 0 0 0-.5-.5z"/>
-                                </svg>
-                                <span class="ms-1 align-texttop">Register</span>
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Kullanıcı Bilgileri Güncelleme Formu -->
-    <div class="container mt-5">
-        <h1 class="mb-4">Profil Bilgileri</h1>
-        <form method="POST" action="{{ url_for('routes.account') }}" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="username" class="form-label">Kullanıcı Adı</label>
-                <input type="text" class="form-control" id="username" name="username" value="{{ current_user.username }}" required>
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">E-posta</label>
-                <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}" required>
-            </div>
-            <div class="mb-3">
-                <label for="image_file" class="form-label">Profil Resmi</label>
-                <div class="mb-2">
-                    <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" class="rounded-circle" width="150" alt="Profil Resmi"/>
+                                <svg> xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                                    </svg>
+                                    <span class="ms-1 align-texttop">Login</span>
+                                </a>
+                            </li>
+                            <li class="nav-item mx-2">
+                                <a class="nav-link" href="{{ url_for('routes.register') }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
+                                        <path d="M8 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                                        <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 0-.5.5v2H5.5a.5.5 0 0 0 0 1H7.5v2a.5.5 0 0 0 1 0v-2h2a.5.5 0 0 0 0-1h-2v-2a.5.5 0 0 0-.5-.5z"/>
+                                    </svg>
+                                    <span class="ms-1 align-texttop">Register</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
                 </div>
-                <input type="file" class="form-control" id="image_file" name="image_file">
             </div>
-            <button type="submit" class="btn btn-primary">Güncelle</button>
-        </form>
-
-        <h2 class="mt-5">Yazdığınız Gönderiler</h2>
-        <div class="inner-main-body p-2 p-sm-3 collapse forum-content show">
-            {% if posts %}
-                {% for post in posts %}
-                    <div class="card mb-2">
-                        <div class="card-body p-2 p-sm-3">
-                            <div class="media forum-item">
-                                <img src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" class="mr-3 rounded-circle" width="50" alt="User"/>
-                                <div class="media-body">
-                                    <h6>
-                                        <a href="{{ url_for('routes.post', post_id=post.id) }}" class="text-body">{{ post.title }}</a>
-                                    </h6>
-                                    <p class="text-secondary">{{ post.content[:150] }}...</p>
-                                    <p class="text-muted">
-                                        <a href="{{ url_for('routes.user_profile', user_id=post.author.id) }}">{{ post.author.username }}</a> paylaştı
-                                        <span class="text-secondary font-weight-bold">{{ post.date_posted.strftime('%d %B %Y') }}</span>
-                                        <a href="{{ url_for('routes.post', post_id=post.id) }}" class="text-secondary">Yorumlar ({{ post.comments|length }})</a>
-                                    </p>
-                                    <a href="#" class="btn btn-link card-link" data-bs-toggle="modal" data-bs-target="#updatePostModal{{ post.id }}">Düzenle</a>
-                                    <form action="{{ url_for('routes.delete_post', post_id=post.id) }}" method="POST" class="d-inline">
-                                        <button type="submit" class="btn btn-link card-link text-danger" onclick="return confirm('Bu gönderiyi silmek istediğinizden emin misiniz?')">Sil</button>
-                                    </form>
+        </nav>
+    
+        <!-- Kullanıcı Bilgileri Güncelleme Formu -->
+        <div class="container mt-5">
+            <h1 class="mb-4">Profil Bilgileri</h1>
+            <form method="POST" action="{{ url_for('routes.account') }}" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Kullanıcı Adı</label>
+                    <input type="text" class="form-control" id="username" name="username" value="{{ current_user.username }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">E-posta</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="image_file" class="form-label">Profil Resmi</label>
+                    <div class="mb-2">
+                        <img src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}" class="rounded-circle" width="150" alt="Profil Resmi"/>
+                    </div>
+                    <input type="file" class="form-control" id="image_file" name="image_file">
+                </div>
+                <button type="submit" class="btn btn-primary">Güncelle</button>
+            </form>
+    
+            <h2 class="mt-5">Yazdığınız Gönderiler</h2>
+            <div class="inner-main-body p-2 p-sm-3 collapse forum-content show">
+                {% if posts %}
+                    {% for post in posts %}
+                        <div class="card mb-2">
+                            <div class="card-body p-2 p-sm-3">
+                                <div class="media forum-item">
+                                    <img src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" class="mr-3 rounded-circle" width="50" alt="User"/>
+                                    <div class="media-body">
+                                        <h6>
+                                            <a href="{{ url_for('routes.post', post_id=post.id) }}" class="text-body">{{ post.title }}</a>
+                                        </h6>
+                                        <p class="text-secondary">{{ post.content[:150] }}...</p>
+                                        <p class="text-muted">
+                                            <a href="{{ url_for('routes.user_profile', user_id=post.author.id) }}">{{ post.author.username }}</a> paylaştı
+                                            <span class="text-secondary font-weight-bold">{{ post.date_posted.strftime('%d %B %Y') }}</span>
+                                            <a href="{{ url_for('routes.post', post_id=post.id) }}" class="text-secondary">Yorumlar ({{ post.comments|length }})</a>
+                                        </p>
+                                        <a href="#" class="btn btn-link card-link" data-bs-toggle="modal" data-bs-target="#updatePostModal{{ post.id }}">Düzenle</a>
+                                        <form action="{{ url_for('routes.delete_post', post_id=post.id) }}" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-link card-link text-danger" onclick="return confirm('Bu gönderiyi silmek istediğinizden emin misiniz?')">Sil</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Düzenleme Modal'ı -->
-                    <div class="modal fade" id="updatePostModal{{ post.id }}" tabindex="-1" aria-labelledby="updatePostModalLabel{{ post.id }}" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="updatePostModalLabel{{ post.id }}">Gönderiyi Güncelle</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form action="{{ url_for('routes.update_post', post_id=post.id) }}" method="POST">
-                                        <div class="mb-3">
-                                            <label for="title{{ post.id }}" class="form-label">Başlık</label>
-                                            <input type="text" class="form-control" id="title{{ post.id }}" name="title" value="{{ post.title }}" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="content{{ post.id }}" class="form-label">İçerik</label>
-                                            <textarea class="form-control" id="content{{ post.id }}" name="content" rows="3" required>{{ post.content }}</textarea>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="category{{ post.id }}" class="form-label">Kategori</label>
-                                            <select class="form-select" id="category{{ post.id }}" name="category" required>
-                                                {% for category in categories %}
-                                                    <option value="{{ category.id }}" {% if post.category_id == category.id %}selected{% endif %}>{{ category.name }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Güncelle</button>
-                                    </form>
+    
+                        <!-- Düzenleme Modal'ı -->
+                        <div class="modal fade" id="updatePostModal{{ post.id }}" tabindex="-1" aria-labelledby="updatePostModalLabel{{ post.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="updatePostModalLabel{{ post.id }}">Gönderiyi Güncelle</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="updatePostForm" action="{{ url_for('routes.update_post', post_id=post.id) }}" method="POST">
+                                            <div class="mb-3">
+                                                <label for="title{{ post.id }}" class="form-label">Başlık</label>
+                                                <input type="text" class="form-control" id="title{{ post.id }}" name="title" value="{{ post.title }}" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="editor{{ post.id }}" class="form-label">İçerik</label>
+                                                <div id="editor{{ post.id }}" class="editor"></div>
+                                                <textarea class="form-control d-none" name="content" rows="3">{{ post.content }}</textarea>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="category{{ post.id }}" class="form-label">Kategori</label>
+                                                <select class="form-select" id="category{{ post.id }}" name="category" required>
+                                                    {% for category in categories %}
+                                                        <option value="{{ category.id }}" {% if post.category_id == category.id %}selected{% endif %}>{{ category.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Güncelle</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p>Henüz yazdığınız gönderi yok.</p>
-            {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p>Henüz yazdığınız gönderi yok.</p>
+                {% endif %}
+            </div>
         </div>
-    </div>
-
-    <!-- Yeni Gönderi Modal -->
-    <div class="modal fade" id="newPostModal" tabindex="-1" aria-labelledby="newPostModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="newPostModalLabel">Yeni Gönderi Paylaş</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ url_for('routes.new_post_home') }}" method="POST">
-                        <div class="mb-3">
-                            <label for="title" class="form-label">Başlık</label>
-                            <input type="text" class="form-control" id="title" name="title" required>
+    
+        <!-- Yeni Gönderi Modal -->
+        <div class="modal fade" id="newPostModal" tabindex="-1" aria-labelledby="newPostModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="newPostModalLabel">Yeni Gönderi Paylaş</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="newPostForm" action="{{ url_for('routes.new_post_home') }}" method="POST">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Başlık</label>
+                                <input type="text" class="form-control" id="title" name="title" required>
                         </div>
                         <div class="mb-3">
-                            <label for="content" class="form-label">İçerik</label>
-                            <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+                            <label for="newPostEditor" class="form-label">İçerik</label>
+                            <div id="newPostEditor" class="editor"></div>
+                            <input type="hidden" name="content">
                         </div>
                         <div class="mb-3">
                             <label for="category" class="form-label">Kategori</label>
@@ -209,5 +216,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script src="{{ url_for('static', filename='js/quill_editor.js') }}"></script>
 </body>
 </html>
